@@ -7,7 +7,7 @@ This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Ka
 	brew install zookeeper
 
 	brew install java
-	
+
 	brew install kafka
 
 
@@ -35,4 +35,4 @@ This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Ka
 
 	Dependencies updated. Of course, i need to change a bit the code and i have to create topic before running the code.
 
-	Compiling but not working.
+	Compiling, i have to push data into topic to test it.
