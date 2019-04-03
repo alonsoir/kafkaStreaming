@@ -93,6 +93,8 @@ object KafkaAndSparkStreaming {
       /*commit the offset after all the processing is completed*/
       rawStream.asInstanceOf[CanCommitOffsets].commitAsync(rangeOfOffsets)
     }
+    //ssc.stop()
+    ssc.awaitTermination()
   }
 }
 
