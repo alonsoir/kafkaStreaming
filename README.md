@@ -1,9 +1,6 @@
 README file chapter 9 My notes
 
-
-I think that dependencies are not right. Not compiling. Dependencies are outdated.
-
-Dependencies updated. Of course, i need to change a bit the code and i have to create topic before running the code.
+This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0
 
 # ZOOKEEPER up and running
 ~/I/Chapter9> zkServer start
@@ -37,3 +34,11 @@ okQl2
 partitioned
 pharma
 test
+
+STATUS
+
+I think that dependencies are not right. Not compiling. Dependencies are outdated.
+
+Dependencies updated. Of course, i need to change a bit the code and i have to create topic before running the code.
+
+Compiling but not working.
