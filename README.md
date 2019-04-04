@@ -54,6 +54,12 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	https://www.stratio.com/blog/optimizing-spark-streaming-applications-apache-kafka/
 
+	https://github.com/AbsaOSS/ABRiS/
+
+	https://github.com/eBay/Spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/DirectKafkaWordCount.scala
+
+	https://spark.apache.org/docs/latest/streaming-kafka-0-10-integration.html
+
 # TROUBLESHOOTING
 
 	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly with jdk11 
