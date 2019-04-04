@@ -1,6 +1,6 @@
-README file chapter 9 My notes
+README file
 
-This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0
+This project is a fork of the provided code of Spark Streaming Processing with Kafka book. 
 
 # Preliminaries
 
@@ -39,3 +39,9 @@ This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Ka
 	Compiling, i have to push data into topic to test it.
 
 	KafkaAndSparkStreaming is working.
+
+# LINKS
+
+	https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0
+
+	https://kafka.apache.org/quickstart
