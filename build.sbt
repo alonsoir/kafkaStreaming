@@ -4,7 +4,7 @@ version := "1.0"
 
 scalaVersion := "2.11.6"
 
-val sparkVersion = "2.4.1"
+val sparkVersion = "2.4.0"
 
 val flinkVersion = "1.7.2"
 
@@ -24,12 +24,5 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion,
   "org.apache.spark" %% "spark-hive" % sparkVersion
-
-  // ,"org.apache.flink" %% "flink-connector-kafka-0.10" % flinkVersion
-  , "org.apache.kafka" %% "kafka-streams-scala" % kafkaStreamScala excludeAll(
-    ExclusionRule(organization = "com.fasterxml.jackson.core"),
-    ExclusionRule(organization = "com.fasterxml.jackson.datatype")
-  )
-  // , "io.confluent" % "kafka-streams-avro-serde" % "5.2.1"
 )
 

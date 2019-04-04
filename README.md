@@ -24,15 +24,18 @@ This project is a fork of https://github.com/PacktPublishing/Mastering-Apache-Ka
 # KAFKA SERVER up and running 
 
 
-	~> kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1  --topic pharma
+	~> kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 1  --topic pharma-topic
 	Created topic "pharma".
 	~> kafka-topics --list --zookeeper localhost:2181
 	pharma
 
 # STATUS
 
-	I think that dependencies are not right. Not compiling. Dependencies are outdated.
+	
+	I think that dependencies are not right. Not compiling any of provided examples. Dependencies are outdated. Starting from scratch with a new fresh view.
 
-	Dependencies updated. Of course, i need to change a bit the code and i have to create topic before running the code.
+	Dependencies updated. I need to change a bit the code and i have to create topic before running the code.
 
 	Compiling, i have to push data into topic to test it.
+
+	KafkaAndSparkStreaming is working.

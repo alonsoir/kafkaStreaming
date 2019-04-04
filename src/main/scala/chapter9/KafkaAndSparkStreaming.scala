@@ -2,7 +2,7 @@ package chapter9
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql.types.{IntegerType, StringType, StructField, StructType}
+import org.apache.spark.sql.types._
 import org.apache.spark.sql.{Row, SQLContext}
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010._
@@ -16,7 +16,7 @@ object KafkaAndSparkStreaming {
     Logger.getRootLogger.setLevel(Level.WARN)
 
     /*Since spark streaming is a consumer, we need to pass it topics*/
-    val topics = Set("pharma")
+    val topics = Set("pharma-topic")
     /*pass kafka configuration details*/
     val kafkaParameters = Map[String, String](
       ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9092",
@@ -41,7 +41,7 @@ object KafkaAndSparkStreaming {
       ConsumerStrategies.Subscribe[String, String](topics, kafkaParameters))
 
     /*gets raw data from topic, explode it, and break it into words */
-    val records = rawStream.map(_.value())
+    val records = rawStream.map(record=>(record.key,record.value))
 
     /*Get metadata of the records and perform analytics on records*/
     rawStream.foreachRDD { rdd =>
@@ -58,42 +58,39 @@ object KafkaAndSparkStreaming {
       /*create SQL context*/
       val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
 
-      /*convert rdd into dataframe by providing header information*/
-      // val pharmaAnalytics = rdd.toDF("country","time","pc_healthxp","pc_gdp","usd_cap","flag_codes","total_spend")
-
-
       def dfSchema(columnNames: List[String]): StructType =
         StructType(
           Seq(
             StructField(name = "country", dataType = StringType, nullable = false),
             StructField(name = "time", dataType = IntegerType, nullable = false),
-            StructField(name = "pc_healthxp", dataType = IntegerType, nullable = false),
-            StructField(name = "pc_gdp", dataType = IntegerType, nullable = false),
-            StructField(name = "usd_cap", dataType = IntegerType, nullable = false),
-            StructField(name = "flag_codes", dataType = IntegerType, nullable = false),
-            StructField(name = "total_spend", dataType = IntegerType, nullable = false)
+            StructField(name = "pc_healthxp", dataType = FloatType, nullable = false),
+            StructField(name = "pc_gdp", dataType = FloatType, nullable = false),
+            StructField(name = "usd_cap", dataType = FloatType, nullable = false),
+            StructField(name = "flag_codes", dataType = StringType, nullable = true),
+            StructField(name = "total_spend", dataType = FloatType, nullable = false)
           )
         )
 
-
-      def row(line: List[String]): Row = Row(line(0), line(1).toInt, line(2).toInt, line(3).toInt, line(4).toInt, line(5).toInt, line(6).toInt)
+      def row(line: List[String]): Row = Row(line(0), line(1).toInt, line(2).toFloat, line(3).toFloat, line(4).toFloat, line(5), line(6).toFloat)
 
       val schema = dfSchema(List("country", "time", "pc_healthxp", "pc_gdp", "usd_cap", "flag_codes", "total_spend"))
 
       val data = rdd.map(_.value().split(",").to[List]).map(row)
-      //val data = rdd.map(_.split(",").to[List]).map(row)
+
+      /*convert rdd into dataframe by providing header information*/
       val pharmaAnalyticsDF = sqlContext.createDataFrame(data, schema)
       /*create temporary table*/
       pharmaAnalyticsDF.registerTempTable("pharmaAnalytics")
 
       /*find total gdp spending per country*/
-      val gdpByCountryDF = sqlContext.sql("select country, sum(total_gdp) as total_gdp from pharmaAnalytics group by country")
-      gdpByCountryDF.show(10)
+      val gdpByCountryDF = sqlContext.sql("select country, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country")
+      gdpByCountryDF.show(100,false)
 
+      sqlContext.sql("select country, time, pc_gdp, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country,time,pc_gdp order by country").show(10,false)
       /*commit the offset after all the processing is completed*/
       rawStream.asInstanceOf[CanCommitOffsets].commitAsync(rangeOfOffsets)
     }
-    //ssc.stop()
+    ssc.start()
     ssc.awaitTermination()
   }
 }
