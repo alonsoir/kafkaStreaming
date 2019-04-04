@@ -45,3 +45,14 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0
 
 	https://kafka.apache.org/quickstart
+
+	https://www.stratio.com/blog/optimizing-spark-streaming-applications-apache-kafka/
+
+# TROUBLESHOOTING
+
+	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly, o i will have to downgraded jdk version to 1.8. 
+	I use fish shell, so i have to invoke that script to change jdk properly.
+	 
+	http://apache-spark-user-list.1001560.n3.nabble.com/java-lang-IllegalArgumentException-Unsupported-class-file-major-version-55-td34546.html
+
+	https://gist.github.com/alonsoir/fb0e6e012a33a802a91801ccd68b30f3

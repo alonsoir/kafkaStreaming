@@ -3,7 +3,7 @@ package chapter9
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.{Row, SQLContext}
+import org.apache.spark.sql.{Row, SparkSession}
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.{SparkConf, TaskContext}
@@ -12,8 +12,8 @@ object KafkaAndSparkStreaming {
 
   /*main method*/
   def main(args: Array[String]) {
-    /*logging at warning level*/
-    Logger.getRootLogger.setLevel(Level.WARN)
+    /*logging at error level*/
+    Logger.getRootLogger.setLevel(Level.ERROR)
 
     /*Since spark streaming is a consumer, we need to pass it topics*/
     val topics = Set("pharma-topic")
@@ -43,6 +43,10 @@ object KafkaAndSparkStreaming {
     /*gets raw data from topic, explode it, and break it into words */
     val records = rawStream.map(record=>(record.key,record.value))
 
+    Logger.getRootLogger.debug("INIT RECORDS")
+    records.print()
+    Logger.getRootLogger.debug("END RECORDS")
+
     /*Get metadata of the records and perform analytics on records*/
     rawStream.foreachRDD { rdd =>
       /*get offset ranges of partitions that will be used to get partition and offset information
@@ -52,12 +56,14 @@ object KafkaAndSparkStreaming {
       rdd.foreachPartition { iter =>
         val metadata = rangeOfOffsets(TaskContext.get.partitionId)
         /*print topic, partition, fromoofset and lastoffset of each partition*/
-        println(s"${metadata.topic} ${metadata.partition} ${metadata.fromOffset} ${metadata.untilOffset}")
-      }
+        println(s"topic: ${metadata.topic} partition: ${metadata.partition} fromOffset: ${metadata.fromOffset} untilOffset: ${metadata.untilOffset}")
+      } // rdd.foreachPartition
       /*using SQL on top of streams*/
       /*create SQL context*/
-      val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
+      val sqlContext = SparkSession.builder().getOrCreate().sqlContext
+      // val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
 
+      // put these two methods in a utility object
       def dfSchema(columnNames: List[String]): StructType =
         StructType(
           Seq(
@@ -89,9 +95,10 @@ object KafkaAndSparkStreaming {
       sqlContext.sql("select country, time, pc_gdp, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country,time,pc_gdp order by country").show(10,false)
       /*commit the offset after all the processing is completed*/
       rawStream.asInstanceOf[CanCommitOffsets].commitAsync(rangeOfOffsets)
-    }
+    } // rdd.forEach
+
     ssc.start()
     ssc.awaitTermination()
-  }
+  } // main
 }
 
