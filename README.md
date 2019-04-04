@@ -38,7 +38,13 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Compiling, i have to push data into topic to test it.
 
-	KafkaAndSparkStreaming is working.
+	KafkaAndSparkStreaming is working. DONE!
+
+	KafkaSparkStreamingReceiver is working. DONE!
+
+	KafkaAndFlink. PENDING!
+
+	Apply optimizations. PENDING!
 
 # LINKS
 
@@ -50,9 +56,13 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 # TROUBLESHOOTING
 
-	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly, o i will have to downgraded jdk version to 1.8. 
+	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly with jdk11 
+	at the time of this record. 
+	
+	You will have to downgraded jdk version to 1.8. 
+
 	I use fish shell, so i have to invoke that script to change jdk properly.
-	 
+
 	http://apache-spark-user-list.1001560.n3.nabble.com/java-lang-IllegalArgumentException-Unsupported-class-file-major-version-55-td34546.html
 
 	https://gist.github.com/alonsoir/fb0e6e012a33a802a91801ccd68b30f3
