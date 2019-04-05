@@ -23,6 +23,8 @@ libraryDependencies ++= Seq(
   "org.apache.spark" %% "spark-sql" % sparkVersion,
   "org.apache.spark" %% "spark-streaming" % sparkVersion,
   "org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion,
-  "org.apache.spark" %% "spark-hive" % sparkVersion
+  "org.apache.spark" %% "spark-hive" % sparkVersion,
+  "org.apache.flink" %% "flink-connector-kafka" % flinkVersion,
+  "org.apache.flink" %% "flink-streaming-scala" % flinkVersion
 )
 
