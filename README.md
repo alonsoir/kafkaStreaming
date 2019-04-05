@@ -79,6 +79,17 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Apply optimizations. PENDING!
 
+# TROUBLESHOOTING
+
+	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly with jdk11 
+	at the time of this record. 
+	
+	You will have to downgraded jdk version to 1.8. 
+
+	I use fish shell, so i have to invoke the script provided in gist to change jdk properly.
+
+	Or be sure to compile the project with jdk 1.8 and scala 2.11.X.
+
 # LINKS
 
 	https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0
@@ -92,15 +103,6 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	https://github.com/eBay/Spark/blob/master/examples/src/main/scala/org/apache/spark/examples/streaming/DirectKafkaWordCount.scala
 
 	https://spark.apache.org/docs/latest/streaming-kafka-0-10-integration.html
-
-# TROUBLESHOOTING
-
-	I used jdk11 for testing purposes, but spark-2.4.X doesnt work properly with jdk11 
-	at the time of this record. 
-	
-	You will have to downgraded jdk version to 1.8. 
-
-	I use fish shell, so i have to invoke that script to change jdk properly.
 
 	http://apache-spark-user-list.1001560.n3.nabble.com/java-lang-IllegalArgumentException-Unsupported-class-file-major-version-55-td34546.html
 
