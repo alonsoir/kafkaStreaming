@@ -104,3 +104,20 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	https://gist.github.com/alonsoir/fb0e6e012a33a802a91801ccd68b30f3
 
 	https://ci.apache.org/projects/flink/flink-docs-stable/dev/connectors/kafka.html
+
+	https://kafka.apache.org/0100/javadoc/index.html?org/apache/kafka/clients/consumer/ConsumerConfig.html
+
+	https://ci.apache.org/projects/flink/flink-docs-master/api/java/org/apache/flink/streaming/api/datastream/package-tree.html
+
+	https://ci.apache.org/projects/flink/flink-docs-release-1.3/api/java/org/apache/flink/streaming/api/windowing/time/class-use/Time.html
+
+	https://www.youtube.com/watch?v=NoFfgJbkl-o
+
+	https://github.com/apache/flink/blob/c1683fbd0aaeb9848b03efaa4c17cc4cc159711c/flink-examples/flink-examples-streaming-kafka-0.10/src/main/scala/org/apache/flink/streaming/scala/examples/kafka/Kafka010Example.scala
+
+	https://stackoverflow.com/questions/40210261/the-benefits-of-flink-kafka-stream-over-spark-kafka-stream-and-kafka-stream-ove
+
+	https://github.com/apache/flink/blob/master/flink-examples/flink-examples-streaming/pom.xml
+
+	https://flink.apache.org/flink-architecture.html
+	
