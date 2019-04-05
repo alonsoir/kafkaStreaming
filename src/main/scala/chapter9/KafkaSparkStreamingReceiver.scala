@@ -1,7 +1,6 @@
 package chapter9
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
 import org.apache.spark.sql.types._
@@ -14,15 +13,10 @@ import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 object KafkaSparkStreamingReceiver {
 
   def main(args: Array[String]) {
-    Logger.getRootLogger.setLevel(Level.ERROR)
-    /*configure all the parameters for createStream*/
-    //val zkQuorum = "localhost:2181, localhost:2182"
-    //val group = "kafka-receiver-based"
-    //val numThreads = "1"
-    /*createStream takes topic name and number of thread needed to pull data in parallel*/
-    val topics = Array("pharma-topic")
 
-    //val topics = Set("pharma").map((_, numThreads.toInt)).toMap
+    Logger.getRootLogger.setLevel(Level.ERROR)
+
+    val topics = Array("pharma-topic")
 
     val kafkaParameters = Map[String, String](
       ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9092",
@@ -57,48 +51,19 @@ object KafkaSparkStreamingReceiver {
       PreferConsistent,
       Subscribe[String, String](topics, kafkaParameters))
 
-    /*raw streams prints the data along with stream information*/
-    // rawStream.print()
-
-    /*get only streams of data*/
-    val lines = rawStream.map(lines=>(lines.key(),lines.value()))
-
-    Logger.getRootLogger.debug("INIT LINES")
-    lines.print()
-    Logger.getRootLogger.debug("END LINES")
 
     /*perform analytics*/
     rawStream.foreachRDD{rdd =>
 
       /*create SQL context*/
       val sqlContext = SparkSession.builder().getOrCreate().sqlContext
-      // val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
-      /*convert rdd into dataframe by providing header information*/
-      def dfSchema(columnNames: List[String]): StructType =
-      StructType(
-        Seq(
-          StructField(name = "country", dataType = StringType, nullable = false),
-          StructField(name = "time", dataType = IntegerType, nullable = false),
-          StructField(name = "pc_healthxp", dataType = FloatType, nullable = false),
-          StructField(name = "pc_gdp", dataType = FloatType, nullable = false),
-          StructField(name = "usd_cap", dataType = FloatType, nullable = false),
-          StructField(name = "flag_codes", dataType = StringType, nullable = true),
-          StructField(name = "total_spend", dataType = FloatType, nullable = false)
-        )
-      )
-
-      def row(line: List[String]): Row = Row(line(0), line(1).toInt, line(2).toFloat, line(3).toFloat, line(4).toFloat, line(5), line(6).toFloat)
-
-      val schema = dfSchema(List("country", "time", "pc_healthxp", "pc_gdp", "usd_cap", "flag_codes", "total_spend"))
-
-      val data = rdd.map(_.value().split(",").to[List]).map(row)
 
       /*convert rdd into dataframe by providing header information*/
-      val pharmaAnalyticsDF = sqlContext.createDataFrame(data, schema)
+      val data = rdd.map(_.value().split(",").to[List]).map(Utils.row)
 
+      /*convert rdd into dataframe by providing header information*/
+      val pharmaAnalyticsDF = sqlContext.createDataFrame(data, Utils.schema)
 
-
-      // val pharmaAnalytics = rdd.toDF("country","time","pc_healthxp","pc_gdp","usd_cap","flag_codes","total_spend")
       /*create temporary table*/
       pharmaAnalyticsDF.registerTempTable("pharmaAnalytics")
 

@@ -31,21 +31,13 @@ object KafkaAndSparkStreaming {
     val sparkConf = new SparkConf().setAppName("KafkaAndSparkStreaming").setMaster("local[*]")
     /*create spark streaming context*/
     val ssc = new StreamingContext(sparkConf, Seconds(30))
+
     /*There are multiple ways to get data from kafka topic using KafkaUtils class.
      * One such method to get data using createDirectStream where this method pulls data using direct stream approach*/
-    // val rawStream = KafkaUtils.createDirectStream[String, String, StringDecoder,StringDecoder](ssc, kafkaParameters, topics)
-
     val rawStream = KafkaUtils.createDirectStream[String, String](
       ssc,
       LocationStrategies.PreferConsistent,
       ConsumerStrategies.Subscribe[String, String](topics, kafkaParameters))
-
-    /*gets raw data from topic, explode it, and break it into words */
-    val records = rawStream.map(record=>(record.key,record.value))
-
-    Logger.getRootLogger.debug("INIT RECORDS")
-    records.print()
-    Logger.getRootLogger.debug("END RECORDS")
 
     /*Get metadata of the records and perform analytics on records*/
     rawStream.foreachRDD { rdd =>
@@ -63,28 +55,10 @@ object KafkaAndSparkStreaming {
       val sqlContext = SparkSession.builder().getOrCreate().sqlContext
       // val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
 
-      // put these two methods in a utility object
-      def dfSchema(columnNames: List[String]): StructType =
-        StructType(
-          Seq(
-            StructField(name = "country", dataType = StringType, nullable = false),
-            StructField(name = "time", dataType = IntegerType, nullable = false),
-            StructField(name = "pc_healthxp", dataType = FloatType, nullable = false),
-            StructField(name = "pc_gdp", dataType = FloatType, nullable = false),
-            StructField(name = "usd_cap", dataType = FloatType, nullable = false),
-            StructField(name = "flag_codes", dataType = StringType, nullable = true),
-            StructField(name = "total_spend", dataType = FloatType, nullable = false)
-          )
-        )
-
-      def row(line: List[String]): Row = Row(line(0), line(1).toInt, line(2).toFloat, line(3).toFloat, line(4).toFloat, line(5), line(6).toFloat)
-
-      val schema = dfSchema(List("country", "time", "pc_healthxp", "pc_gdp", "usd_cap", "flag_codes", "total_spend"))
-
-      val data = rdd.map(_.value().split(",").to[List]).map(row)
+      val data = rdd.map(_.value().split(",").to[List]).map(Utils.row)
 
       /*convert rdd into dataframe by providing header information*/
-      val pharmaAnalyticsDF = sqlContext.createDataFrame(data, schema)
+      val pharmaAnalyticsDF = sqlContext.createDataFrame(data, Utils.schema)
       /*create temporary table*/
       pharmaAnalyticsDF.registerTempTable("pharmaAnalytics")
 
