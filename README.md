@@ -60,8 +60,8 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	In the root folder, run this command:
 	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
 
-	You will see the output in the terminal you execute run command.
-	
+	You will see the output in the terminal where you execute run command.
+
 # STATUS
 
 	
