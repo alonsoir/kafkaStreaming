@@ -64,18 +64,13 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 # STATUS
 
-	
-	I think that dependencies are not right. Not compiling any of provided examples. Dependencies are outdated. Starting from scratch with a new fresh view.
-
-	Dependencies updated. I need to change a bit the code and i have to create topic before running the code.
-
-	Compiling, i have to push data into topic to test it.
-
 	KafkaAndSparkStreaming is working. DONE!
 
 	KafkaSparkStreamingReceiver is working. DONE!
 
-	KafkaAndFlink. PENDING!
+	KafkaAndFlink. In process. 
+		WordCount is working, KafkaStreamingFlink is barely working, i can push data into kafka topic and flink is streaming data, but
+		intellij is not working properly because i cannot autocomplete nothing. 
 
 	Apply optimizations. PENDING!
 
@@ -107,3 +102,5 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	http://apache-spark-user-list.1001560.n3.nabble.com/java-lang-IllegalArgumentException-Unsupported-class-file-major-version-55-td34546.html
 
 	https://gist.github.com/alonsoir/fb0e6e012a33a802a91801ccd68b30f3
+
+	https://ci.apache.org/projects/flink/flink-docs-stable/dev/connectors/kafka.html
