@@ -133,4 +133,8 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	https://github.com/apache/flink/blob/master/flink-examples/flink-examples-streaming/pom.xml
 
 	https://flink.apache.org/flink-architecture.html
+
+	https://github.com/apache/flink/blob/master/flink-examples/flink-examples-streaming/src/main/scala/org/apache/flink/streaming/scala/examples/windowing/SessionWindowing.scala
+
+	
 	
