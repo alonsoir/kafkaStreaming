@@ -1,4 +1,4 @@
-name := "SparkJobs"
+name := "Chapter9"
 
 version := "1.0"
 

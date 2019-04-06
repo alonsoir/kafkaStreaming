@@ -35,27 +35,37 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Choose the main class
 
-	/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin/java -agentlib:jdwp=transport=dt_socket,address=localhost:49744,suspend=n,server=y -Xdebug -server -Xmx1536M -Didea.managed=true -Dfile.encoding=UTF-8 -jar "/Users/aironman/Library/Application Support/IdeaIC2019.1/Scala/launcher/sbt-launch.jar" --addPluginSbtFile=/private/var/folders/gn/pzkybyfd2g5bpyh47q0pp5nc0000gn/T/idea1.sbt "; set ideaPort in Global := 49598 ; idea-shell"
-	Listening for transport dt_socket at address: 49744
-	[info] Loading settings for project global-plugins from idea1.sbt ...
+	aironman@MacBook-Pro-Retina-de-Alonso ~/I/Chapter9> sbt run
 	[info] Loading global plugins from /Users/aironman/.sbt/1.0/plugins
 	[info] Loading settings for project chapter9-build from plugins.sbt ...
 	[info] Loading project definition from /Users/aironman/IdeaProjects/Chapter9/project
 	[info] Loading settings for project chapter9 from build.sbt ...
-	[info] Set current project to SparkJobs (in build file:/Users/aironman/IdeaProjects/Chapter9/)
-	[info] Defining Global / ideaPort
-	[info] The new value will be used by Compile / compile, Test / compile
-	[info] Reapplying settings...
-	[info] Set current project to SparkJobs (in build file:/Users/aironman/IdeaProjects/Chapter9/)
-	[IJ]sbt:SparkJobs> run
+	[info] Set current project to Chapter9 (in build file:/Users/aironman/IdeaProjects/Chapter9/)
+	[info] Updating ...
+	[info] Done updating.
+	[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+	[info] Compiling 5 Scala sources to /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/classes ...
+	[warn] there were two deprecation warnings; re-run with -deprecation for details
+	[warn] one warning found
+	[info] Done compiling.
+	WARNING: An illegal reflective access operation has occurred
+	WARNING: Illegal reflective access by com.google.protobuf.UnsafeUtil (file:/Users/aironman/.sbt/boot/scala-2.12.7/org.scala-sbt/sbt/1.2.8/protobuf-java-3.3.1.jar) to field java.nio.Buffer.address
+	WARNING: Please consider reporting this to the maintainers of com.google.protobuf.UnsafeUtil
+	WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+	WARNING: All illegal access operations will be denied in a future release
 	[warn] Multiple main classes detected.  Run 'show discoveredMainClasses' to see the list
 
 	Multiple main classes detected, select one to run:
 
  		[1] chapter9.KafkaAndSparkStreaming
  		[2] chapter9.KafkaSparkStreamingReceiver
+ 		[3] chapter9.KafkaStreamWithFlink
+ 		[4] chapter9.WordCountFlink
+	[info] Packaging /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/chapter9_2.11-1.0.jar ...
+	[info] Done packaging.
 
 	Enter number: 
+ 
 
 	In the root folder, run this command:
 	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
@@ -68,9 +78,8 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	KafkaSparkStreamingReceiver is working. DONE!
 
-	KafkaAndFlink. In process. 
-		WordCount is working, KafkaStreamingFlink is barely working, i can push data into kafka topic and flink is streaming data, but
-		intellij is not working properly because i cannot autocomplete nothing. 
+	KafkaAndFlink. DONE!
+		WordCount is working, KafkaStreamingFlink is working. 
 
 	Apply optimizations. PENDING!
 
@@ -84,6 +93,10 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	I use fish shell, so i have to invoke the script provided in gist to change jdk properly.
 
 	Or be sure to compile the project with jdk 1.8 and scala 2.11.X.
+
+	A recurrent problem happened when i tried to go to any declaration, imports missing. 
+	The way to solve it is to change name variable in build.sbt file. 
+	There were a name different from the name project, Chapter9. It MUST be the same that name project. 
 
 # LINKS
 

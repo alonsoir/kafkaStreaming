@@ -1,19 +1,11 @@
 package chapter9
 
-import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.flink.api.java.utils.ParameterTool
-import org.apache.flink.streaming.api.scala._
-import org.apache.flink.api.common.restartstrategy.RestartStrategies
+import java.util.Properties
+
 import org.apache.flink.api.common.serialization.SimpleStringSchema
-import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 import org.apache.flink.streaming.connectors.kafka._
-import org.apache.flink.streaming.util.serialization.KeyedDeserializationSchema
-import org.apache.flink.streaming.util.serialization.KeyedSerializationSchema
-import org.apache.flink.util.NetUtils
-import java.util.Properties
-import org.apache.flink.api.common.functions._
-import org.apache.flink.streaming.api.windowing.time.Time
+import org.apache.kafka.clients.consumer.ConsumerConfig
 
 object KafkaStreamWithFlink {
 
@@ -64,7 +56,7 @@ object KafkaStreamWithFlink {
     val dataStream = exec_env.addSource(consumerForOffset)
 
     /*print raw stream*/
-    dataStream.print()
+    // dataStream.print()
 
     /*count the GDP per country in a window of 10 seconds
     val gdpPerCountry = dataStream
@@ -76,9 +68,8 @@ object KafkaStreamWithFlink {
         if (vals.head != null) c.collect((vals.head.state, 1))
       }
     )
+*/
 
-
-     */
     /*print the gdpPerCountry*/
     // gdpPerCountry.print
 
