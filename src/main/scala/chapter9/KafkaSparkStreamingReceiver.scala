@@ -14,7 +14,7 @@ object KafkaSparkStreamingReceiver {
 
   def main(args: Array[String]) {
 
-    Logger.getRootLogger.setLevel(Level.ERROR)
+    //Logger.getRootLogger.setLevel(Level.ERROR)
 
     val topics = Array("pharma-topic")
 
