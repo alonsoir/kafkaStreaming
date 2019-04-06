@@ -2,8 +2,7 @@ package chapter9
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.log4j.{Level, Logger}
-import org.apache.spark.sql.types._
-import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.{SparkConf, TaskContext}
@@ -53,7 +52,6 @@ object KafkaAndSparkStreaming {
       /*using SQL on top of streams*/
       /*create SQL context*/
       val sqlContext = SparkSession.builder().getOrCreate().sqlContext
-      // val sqlContext = SQLContext.getOrCreate(rdd.sparkContext)
 
       val data = rdd.map(_.value().split(",").to[List]).map(Utils.row)
 
