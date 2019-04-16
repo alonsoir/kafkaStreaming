@@ -35,6 +35,9 @@ object KafkaAndSparkStreaming {
       ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG -> "10000",
       // This can be incremented in order to avoid generating consumers losses,
       // only if it is in the range of the properties group.min.session.timeout.ms and group.max.session.timeout.ms
+      // If your Spark batch duration is larger than the default Kafka heartbeat session timeout (30 seconds),
+      // increase heartbeat.interval.ms and session.timeout.ms appropriately.
+      // For batches larger than 5 minutes, this will require changing group.max.session.timeout.ms
       ConsumerConfig.HEARTBEAT_INTERVAL_MS_CONFIG -> "3000",
       // It must be ⅓ of the time of session.timeout.ms and you should increase it as incrementing session.timeout.ms maintaining the proportion.
       ConsumerConfig.MAX_POLL_INTERVAL_MS_CONFIG -> "300000",
@@ -42,7 +45,95 @@ object KafkaAndSparkStreaming {
       ConsumerConfig.REQUEST_TIMEOUT_MS_CONFIG -> "305000",
       // It must be bigger than max.poll.interval.ms. connections.max.idle.ms, 540000
       ConsumerConfig.CONNECTIONS_MAX_IDLE_MS_CONFIG -> "540000"
-      // Parameters to be configured in Kafka brokers. num.network.threads, 3 TODO!
+      // There are properties that can only be changed by editing the server.properties file.
+      // To date, it can not be done programmatically.
+      // server.properties file
+      // message.max.bytes=1000000
+      // num.network.threads=3
+      // num.io.threads=8
+      // background.threads=10
+      // queued.max.requests=500
+      // socket.send.buffer.bytes=102400
+      // socket.receive.buffer.bytes=102400
+      // socket.request.max.bytes=104857600
+      // num.partitions=1
+      // fetch.purgatory.purge.interval.requests=100
+      // producer.purgatory.purge.interval.requests=100
+      // Quick explanations of the numbers:
+      //
+      // message.max.bytes:                          This sets the maximum size of the message that the server can receive.
+      //                                             This should be set to prevent any producer from inadvertently sending extra large messages and swamping the consumers.
+      //                                             The default size is 1000000.
+
+      // num.network.threads:                        This sets the number of threads running to handle the network's request.
+      //                                             If you are going to have too many requests coming in, then you need to change this value. Else, you are good to go.
+      //                                             Its default value is 3.
+      //                                             Set num.network.threads higher based on number of concurrent producers, consumers, and replication factor.
+      //
+      //                                             The default value of 3 has been set based on field experience, however, you can take an iterative approach
+      //                                             and test different values until you find what is optimal for your case.
+
+      // num.io.threads:                             This sets the number of threads spawned for IO operations.
+      //                                             This is should be set to the number of disks present at the least.
+      //                                             Its default value is 8.
+      //                                             A common broker server has 8 disks. This number can be increased.
+
+      // background.threads:                         This sets the number of threads that will be running and doing various background jobs.
+      //                                             These include deleting old log files.
+      //                                             Its default value is 10 and you might not need to change it.
+
+      // queued.max.requests:                        This sets the queue size that holds the pending messages while others are being processed by the IO threads.
+      //                                             If the queue is full, the network threads will stop accepting any more messages.
+      //                                             If you have erratic loads in your application, you need to set queued.max.requests to a value at which it will not throttle.
+
+      // socket.send.buffer.bytes:                   This sets the SO_SNDBUFF buffer size, which is used for socket connections. 1048576
+
+      // socket.receive.buffer.bytes:                This sets the SO_RCVBUFF buffer size, which is used for socket connections. 1048576
+
+      // socket.request.max.bytes:                   This sets the maximum size of the request that the server can receive.
+      //                                             This should be smaller than the Java heap size you have set. 104857600
+
+      // num.partitions:                             This sets the number of default partitions of a topic you create without explicitly giving any partition size.
+      //                                             Number of partitions may have to be higher than 1 for reliability, but for performance (even not realistic :)), 1 is better.
+      //
+      //                                             Ideally you want to assign the default number of partitions (num.partitions) to at least n-1 servers.
+      //                                             This can break up the write workload and it allows for greater parallelism on the consumer side.
+      //                                             Remember that Kafka does total ordering within a partition, not over multiple partitions, so make sure you partition intelligently
+      //                                             on the producer side to parcel up units of work that might span multiple messages/events.
+      //
+      //                                             Consumers benefit from this approach, on producers – careful design is recommended.
+      //                                             You need to balance the benefits between producer and consumers based on your business needs.
+      //
+      //                                             Kafka is designed for small messages. I recommend you to avoid using kafka for larger messages.
+      //                                             If that’s not avoidable there are several ways to go about sending larger messages like 1MB.
+      //                                             Use compression if the original message is json, xml or text using compression is the best option to reduce the size.
+      //                                             Large messages will affect your performance and throughput.
+      //                                             Check your topic partitions and replica.fetch.size to make sure it doesn’t go over your physical ram.
+      //                                             Another approach is to break the message into smaller chunks and use the same message key to send it same partition.
+      //                                             This way you are sending small messages and these can be re-assembled at the consumer side.
+      //
+      //                                             This complicates your Producer and Consumer code in case of very large messages.
+      //                                             Design carefully how Producers and Consumers deal with large size messages.
+      //                                             There are many ways to implement compression or chunking, as well decompression and assembly.
+      //                                             Choose after testing your approach. For example, a high compression ratio is most of the time an advantage but it comes
+      //                                             with a price paid for compression/decompression time.
+      //                                             It is sometimes more efficient to have a lesser compression as long as you can reduce the size of the message under 1MB,
+      //                                             but faster compression/decompression. It all comes-down to your SLAs whether they are ms or seconds.
+
+      //                                             These are no silver bullet :), however, you could test these changes with a test topic and 1,000/10,000/100,000 messages
+      //                                             per second to see the difference between default values and adjusted values. Vary some of them to see the difference.
+      //
+      //                                             You may need to configure your Java installation for maximum performance.
+      //                                             This includes the settings for heap, socket size, and so on.
+      //                                             Follow the scientific method, observe, launch hypotheses, create the experiment with the parameters,
+      //                                             collect the data and check if it fits your hypothesis. If it does, do peer review and let
+      //                                             the community have their say so that we can all learn.
+
+      // fetch.purgatory.purge.interval.requests:    Specify the interval in number of requests that triggers the purging of the fetch requests.100
+
+      // producer.purgatory.purge.interval.requests: Specify the interval in number of requests that triggers the purging of the producer requests. 100
+
+      // Thank you, @Randy Gelhausen and @Constantin Stanca for the references.
     )
 
     /*
@@ -61,6 +152,10 @@ object KafkaAndSparkStreaming {
     https://www.stratio.com/blog/optimizing-spark-streaming-applications-apache-kafka/
 
     https://stackoverflow.com/questions/26562033/how-to-set-apache-spark-executor-memory
+
+    https://www.ibm.com/support/knowledgecenter/en/SSPFMY_1.3.5/com.ibm.scala.doc/config/iwa_cnf_scldc_kfk_prp_exmpl_c.html
+
+    https://www.confluent.io/blog/how-choose-number-topics-partitions-kafka-cluster
 
     */
 
