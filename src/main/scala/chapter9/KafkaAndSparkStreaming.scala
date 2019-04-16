@@ -61,77 +61,120 @@ object KafkaAndSparkStreaming {
       // producer.purgatory.purge.interval.requests=100
       // Quick explanations of the numbers:
       //
-      // message.max.bytes:                          This sets the maximum size of the message that the server can receive.
-      //                                             This should be set to prevent any producer from inadvertently sending extra large messages and swamping the consumers.
+      // message.max.bytes:                          This sets the maximum size of the message that the server can
+      //                                             receive.
+      //                                             This should be set to prevent any producer from inadvertently
+      //                                             sending extra large messages and swamping the consumers.
       //                                             The default size is 1000000.
 
-      // num.network.threads:                        This sets the number of threads running to handle the network's request.
-      //                                             If you are going to have too many requests coming in, then you need to change this value. Else, you are good to go.
+      // num.network.threads:                        This sets the number of threads running to handle the network's
+      //                                             request.
+      //                                             If you are going to have too many requests coming in, then you need
+      //                                             to change this value. Else, you are good to go.
       //                                             Its default value is 3.
-      //                                             Set num.network.threads higher based on number of concurrent producers, consumers, and replication factor.
+      //                                             Set num.network.threads higher based on number of concurrent
+      //                                             producers, consumers, and replication factor.
       //
-      //                                             The default value of 3 has been set based on field experience, however, you can take an iterative approach
-      //                                             and test different values until you find what is optimal for your case.
+      //                                             The default value of 3 has been set based on field experience,
+      //                                             however, you can take an iterative approach
+      //                                             and test different values until you find what is optimal for your
+      //                                             case.
 
       // num.io.threads:                             This sets the number of threads spawned for IO operations.
       //                                             This is should be set to the number of disks present at the least.
       //                                             Its default value is 8.
       //                                             A common broker server has 8 disks. This number can be increased.
 
-      // background.threads:                         This sets the number of threads that will be running and doing various background jobs.
+      // background.threads:                         This sets the number of threads that will be running and doing
+      //                                             various background jobs.
       //                                             These include deleting old log files.
       //                                             Its default value is 10 and you might not need to change it.
 
-      // queued.max.requests:                        This sets the queue size that holds the pending messages while others are being processed by the IO threads.
-      //                                             If the queue is full, the network threads will stop accepting any more messages.
-      //                                             If you have erratic loads in your application, you need to set queued.max.requests to a value at which it will not throttle.
+      // queued.max.requests:                        This sets the queue size that holds the pending messages while
+      //                                             others are being processed by the IO threads.
+      //                                             If the queue is full, the network threads will stop accepting any
+      //                                             more messages.
+      //                                             If you have erratic loads in your application, you need to set
+      //                                             queued.max.requests to a value at which it will not throttle.
 
-      // socket.send.buffer.bytes:                   This sets the SO_SNDBUFF buffer size, which is used for socket connections. 1048576
+      // socket.send.buffer.bytes:                   This sets the SO_SNDBUFF buffer size, which is used for socket
+      //                                             connections. 1048576
 
-      // socket.receive.buffer.bytes:                This sets the SO_RCVBUFF buffer size, which is used for socket connections. 1048576
+      // socket.receive.buffer.bytes:                This sets the SO_RCVBUFF buffer size, which is used for socket
+      //                                             connections. 1048576
 
-      // socket.request.max.bytes:                   This sets the maximum size of the request that the server can receive.
-      //                                             This should be smaller than the Java heap size you have set. 104857600
+      // socket.request.max.bytes:                   This sets the maximum size of the request that the server can
+      //                                             receive. This should be smaller than the Java heap size you
+      //                                             have set. 104857600
 
-      // num.partitions:                             This sets the number of default partitions of a topic you create without explicitly giving any partition size.
-      //                                             Number of partitions may have to be higher than 1 for reliability, but for performance (even not realistic :)), 1 is better.
+      // num.partitions:                             This sets the number of default partitions of a topic you create
+      //                                             without explicitly giving any partition size.
+      //                                             Number of partitions may have to be higher than 1 for reliability,
+      //                                             but for performance (even not realistic :)), 1 is better.
       //
-      //                                             Ideally you want to assign the default number of partitions (num.partitions) to at least n-1 servers.
-      //                                             This can break up the write workload and it allows for greater parallelism on the consumer side.
-      //                                             Remember that Kafka does total ordering within a partition, not over multiple partitions, so make sure you partition intelligently
-      //                                             on the producer side to parcel up units of work that might span multiple messages/events.
+      //                                             Ideally you want to assign the default number of partitions
+      //                                             (num.partitions) to at least n-1 servers.
+      //                                             This can break up the write workload and it allows for greater
+      //                                             parallelism on the consumer side.
+      //                                             Remember that Kafka does total ordering within a partition, not
+      //                                             over multiple partitions, so make sure you partition intelligently
+      //                                             on the producer side to parcel up units of work that might
+      //                                             span multiple messages/events.
       //
-      //                                             Consumers benefit from this approach, on producers – careful design is recommended.
-      //                                             You need to balance the benefits between producer and consumers based on your business needs.
+      //                                             Consumers benefit from this approach, on producers – careful design
+      //                                             is recommended.
+      //                                             You need to balance the benefits between producer and consumers
+      //                                             based on your business needs.
       //
-      //                                             Kafka is designed for small messages. I recommend you to avoid using kafka for larger messages.
-      //                                             If that’s not avoidable there are several ways to go about sending larger messages like 1MB.
-      //                                             Use compression if the original message is json, xml or text using compression is the best option to reduce the size.
+      //                                             Kafka is designed for small messages. I recommend you to avoid
+      //                                             using kafka for larger messages.
+      //                                             If that’s not avoidable there are several ways to go about sending
+      //                                             larger messages like 1MB.
+      //                                             Use compression if the original message is json, xml or text using
+      //                                             compression is the best option to reduce the size.
       //                                             Large messages will affect your performance and throughput.
-      //                                             Check your topic partitions and replica.fetch.size to make sure it doesn’t go over your physical ram.
-      //                                             Another approach is to break the message into smaller chunks and use the same message key to send it same partition.
-      //                                             This way you are sending small messages and these can be re-assembled at the consumer side.
+      //                                             Check your topic partitions and replica.fetch.size to make sure
+      //                                             it doesn’t go over your physical ram.
+      //                                             Another approach is to break the message into smaller chunks and
+      //                                             use the same message key to send it same partition.
+      //                                             This way you are sending small messages and these can be
+      //                                             re-assembled at the consumer side.
       //
-      //                                             This complicates your Producer and Consumer code in case of very large messages.
-      //                                             Design carefully how Producers and Consumers deal with large size messages.
-      //                                             There are many ways to implement compression or chunking, as well decompression and assembly.
-      //                                             Choose after testing your approach. For example, a high compression ratio is most of the time an advantage but it comes
-      //                                             with a price paid for compression/decompression time.
-      //                                             It is sometimes more efficient to have a lesser compression as long as you can reduce the size of the message under 1MB,
-      //                                             but faster compression/decompression. It all comes-down to your SLAs whether they are ms or seconds.
+      //                                             This complicates your Producer and Consumer code in case of
+      //                                             very large messages.
+      //                                             Design carefully how Producers and Consumers deal with large
+      //                                             size messages.
+      //                                             Emphasizing this point is very important!.
+      //                                             There are many ways to implement compression or chunking,
+      //                                             as well decompression and assembly.
+      //                                             Choose after testing your approach.
+      //                                             For example, a high compression ratio is most of the time an
+      //                                             advantage but it comes with a price paid for
+      //                                             compression/decompression time.
+      //                                             It is sometimes more efficient to have a lesser compression as long
+      //                                             as you can reduce the size of the message under 1MB,
+      //                                             but faster compression/decompression.
+      //                                             It all comes-down to your SLAs whether they are ms or seconds.
 
-      //                                             These are no silver bullet :), however, you could test these changes with a test topic and 1,000/10,000/100,000 messages
-      //                                             per second to see the difference between default values and adjusted values. Vary some of them to see the difference.
+      //                                             These are no silver bullet :), however, you could test these
+      //                                             changes with a test topic and 1,000/10,000/100,000 messages
+      //                                             per second to see the difference between default values and
+      //                                             adjusted values. Vary some of them to see the difference.
       //
-      //                                             You may need to configure your Java installation for maximum performance.
+      //                                             You may need to configure your Java installation for maximum
+      //                                             performance.
       //                                             This includes the settings for heap, socket size, and so on.
-      //                                             Follow the scientific method, observe, launch hypotheses, create the experiment with the parameters,
-      //                                             collect the data and check if it fits your hypothesis. If it does, do peer review and let
+      //                                             Follow the scientific method, observe, launch hypotheses, create
+      //                                             the experiment with the parameters,
+      //                                             collect the data and check if it fits your hypothesis.
+      //                                             If it does, do peer review and let
       //                                             the community have their say so that we can all learn.
 
-      // fetch.purgatory.purge.interval.requests:    Specify the interval in number of requests that triggers the purging of the fetch requests.100
+      // fetch.purgatory.purge.interval.requests:    Specify the interval in number of requests that triggers
+      //                                             the purging of the fetch requests.100
 
-      // producer.purgatory.purge.interval.requests: Specify the interval in number of requests that triggers the purging of the producer requests. 100
+      // producer.purgatory.purge.interval.requests: Specify the interval in number of requests that triggers
+      //                                             the purging of the producer requests. 100
 
       // Thank you, @Randy Gelhausen and @Constantin Stanca for the references.
     )
@@ -164,24 +207,30 @@ object KafkaAndSparkStreaming {
                         .setAppName("KafkaAndSparkStreaming")
                         .setMaster("local[*]")
                         // 3 partitions, 3 executors using two cores each with 2GB ram.
-                        // One executor per partition. spark.cores.max equal to number partitions multiplied by spark.executor.cores
+                        // One executor per partition. spark.cores.max equal to number partitions multiplied by
+                        // spark.executor.cores
                         .set("spark.cores.max","6")
                         .set("spark.executor.cores","2")
                         .set("spark.executor.memory","2g")
-                        // Optimize the executor election when Spark compute one task, this have direct impact into the Scheduling Delay.
+                        // Optimize the executor election when Spark compute one task,
+                        // this have direct impact into the Scheduling Delay.
                         .set("spark.locality.wait","100")
                         // Activating the BackPressure resulted in the stable performance of a streaming application.
                         // You should activate it in Spark production environments with Kafka
                         .set("spark.streaming.backpressure.enabled","true")
                         // Probably, the most important configuration parameter assigned to the Kafka consumer.
-                        // This function is very delicate because it is the one which returns the records to Spark requested by Kafka by a .seek.
-                        // If after two attempts there is a timeout, the Task is FAILED and sent to another Spark executor causing a delay in the streaming window.
-                        // If the timeout is too low and the Kafka brokers need more time to answer there will be many “TASK FAILED”s,
+                        // This function is very delicate because it is the one which returns the records to Spark
+                        // requested by Kafka by a .seek.
+                        // If after two attempts there is a timeout, the Task is FAILED and sent to another
+                        // Spark executor causing a delay in the streaming window.
+                        // If the timeout is too low and the Kafka brokers need more time to answer there will be
+                        // many “TASK FAILED”s,
                         // which causes a delay in the preparation of the assigned tasks into the Executors.
                         // However, if this timeout is too high the Spark executor wastes a lot of time doing nothing
                         // and produces large delays (pollTimeout + task scheduling in the new executor).
                         //The default value of the Spark version 2.x. was 512ms, which could be a good start.
-                        // If the Spark jobs cause many “TASK FAILED”s you would need to RAISE that value and investigate why the Kafka brokers
+                        // If the Spark jobs cause many “TASK FAILED”s you would need to RAISE that value and
+                        // investigate why the Kafka brokers
                         // took so long to send the records to the poll.
                         .set("spark.streaming.kafka.consumer.poll.ms","512")
     /*create spark streaming context*/
@@ -200,14 +249,18 @@ object KafkaAndSparkStreaming {
          Get offset ranges of partitions that will be used to get partition and offset information
          and also this information will be used to commit the offset.
          The offsets indicate where the groupld assigned to the Spark consumer is reading from.
-         This is very important because it guarantees the HA during the streaming process and avoids losing data if there is an error.
+         This is very important because it guarantees the HA during the streaming process and avoids losing data
+         if there is an error.
        */
       val rangeOfOffsets = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
       /*get partition information*/
       rdd.foreachPartition { iter =>
         val metadata = rangeOfOffsets(TaskContext.get.partitionId)
         /*print topic, partition, fromoofset and lastoffset of each partition*/
-        println(s"topic: ${metadata.topic} partition: ${metadata.partition} fromOffset: ${metadata.fromOffset} untilOffset: ${metadata.untilOffset}")
+        println(s"topic: ${metadata.topic} " +
+                s"partition: ${metadata.partition} " +
+                s"fromOffset: ${metadata.fromOffset} " +
+                s"untilOffset: ${metadata.untilOffset}")
       } // rdd.foreachPartition
       /*using SQL on top of streams*/
       /*create SQL context*/
@@ -224,7 +277,8 @@ object KafkaAndSparkStreaming {
       val gdpByCountryDF = sqlContext.sql("select country, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country")
       gdpByCountryDF.show(100,false)
 
-      sqlContext.sql("select country, time, pc_gdp, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country,time,pc_gdp order by country").show(10,false)
+      sqlContext.sql("select country, time, pc_gdp, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country,time,pc_gdp order by country")
+                .show(10,false)
       /*
         Commit the offset after all the processing is completed.
         Using the new API to manage the offsets is not necessary neither to make the implementation
