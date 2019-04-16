@@ -1,14 +1,20 @@
 package chapter9
 
 import org.apache.kafka.clients.consumer.ConsumerConfig
-import org.apache.log4j.{Level, Logger}
 import org.apache.spark.SparkConf
-import org.apache.spark.sql.types._
-import org.apache.spark.sql.{Row, SparkSession}
+import org.apache.spark.sql.SparkSession
 import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
+
+/***
+  * This class tries to show the first way to get data streaming between spark and kafka 0.10.X.
+  * It is the recommended way to use, i.e. instantiate the static createDirectStream method,
+  * because it is parallelizable and therefore gives more performance.
+  *
+  * In previous versions, 0.8.X, there was another way that today is completely discouraged, so much so that currently can not be used in version 0.10.X.
+  */
 
 object KafkaSparkStreamingReceiver {
 
