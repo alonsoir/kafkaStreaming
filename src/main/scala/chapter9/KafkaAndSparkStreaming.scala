@@ -176,7 +176,7 @@ object KafkaAndSparkStreaming {
       // producer.purgatory.purge.interval.requests: Specify the interval in number of requests that triggers
       //                                             the purging of the producer requests. 100
 
-      // Thank you, @Randy Gelhausen and @Constantin Stanca for the references.
+      // Thank you, @Randy Gelhausen , @Constantin Stanca, @Jose Carlos Serrano for the references.
     )
 
     /*
