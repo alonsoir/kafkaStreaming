@@ -31,6 +31,15 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 # TO RUN AND TEST
 	
 	Clone the project, import it to Intellij or whatever IDE you use.
+
+	In the root folder, run these commands:
+
+	# Run zookeeper first
+	~> zkServer start 
+
+	# Run kafka producer
+	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
+
 	Run command sbt run
 
 	Choose the main class
@@ -66,9 +75,6 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Enter number: 
  
-
-	In the root folder, run this command:
-	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
 
 	You will see the output in the terminal where you execute run command.
 
