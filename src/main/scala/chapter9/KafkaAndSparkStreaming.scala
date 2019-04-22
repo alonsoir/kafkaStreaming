@@ -7,7 +7,7 @@ import org.apache.spark.streaming._
 import org.apache.spark.streaming.kafka010._
 import org.apache.spark.{SparkConf, TaskContext}
 
-/***
+/** *
   * This class tries to show the first way to get data streaming between spark and kafka 0.10.X.
   * It is the recommended way to use, i.e. instantiate the static createDirectStream method,
   * because it is parallelizable and therefore gives more performance.
@@ -204,35 +204,35 @@ object KafkaAndSparkStreaming {
 
     /*create spark configurations*/
     val sparkConf = new SparkConf()
-                        .setAppName("KafkaAndSparkStreaming")
-                        .setMaster("local[*]")
-                        // 3 partitions, 3 executors using two cores each with 2GB ram.
-                        // One executor per partition. spark.cores.max equal to number partitions multiplied by
-                        // spark.executor.cores
-                        .set("spark.cores.max","6")
-                        .set("spark.executor.cores","2")
-                        .set("spark.executor.memory","2g")
-                        // Optimize the executor election when Spark compute one task,
-                        // this have direct impact into the Scheduling Delay.
-                        .set("spark.locality.wait","100")
-                        // Activating the BackPressure resulted in the stable performance of a streaming application.
-                        // You should activate it in Spark production environments with Kafka
-                        .set("spark.streaming.backpressure.enabled","true")
-                        // Probably, the most important configuration parameter assigned to the Kafka consumer.
-                        // This function is very delicate because it is the one which returns the records to Spark
-                        // requested by Kafka by a .seek.
-                        // If after two attempts there is a timeout, the Task is FAILED and sent to another
-                        // Spark executor causing a delay in the streaming window.
-                        // If the timeout is too low and the Kafka brokers need more time to answer there will be
-                        // many “TASK FAILED”s,
-                        // which causes a delay in the preparation of the assigned tasks into the Executors.
-                        // However, if this timeout is too high the Spark executor wastes a lot of time doing nothing
-                        // and produces large delays (pollTimeout + task scheduling in the new executor).
-                        //The default value of the Spark version 2.x. was 512ms, which could be a good start.
-                        // If the Spark jobs cause many “TASK FAILED”s you would need to RAISE that value and
-                        // investigate why the Kafka brokers
-                        // took so long to send the records to the poll.
-                        .set("spark.streaming.kafka.consumer.poll.ms","512")
+      .setAppName("KafkaAndSparkStreaming")
+      .setMaster("local[*]")
+      // 3 partitions, 3 executors using two cores each with 2GB ram.
+      // One executor per partition. spark.cores.max equal to number partitions multiplied by
+      // spark.executor.cores
+      .set("spark.cores.max", "6")
+      .set("spark.executor.cores", "2")
+      .set("spark.executor.memory", "2g")
+      // Optimize the executor election when Spark compute one task,
+      // this have direct impact into the Scheduling Delay.
+      .set("spark.locality.wait", "100")
+      // Activating the BackPressure resulted in the stable performance of a streaming application.
+      // You should activate it in Spark production environments with Kafka
+      .set("spark.streaming.backpressure.enabled", "true")
+      // Probably, the most important configuration parameter assigned to the Kafka consumer.
+      // This function is very delicate because it is the one which returns the records to Spark
+      // requested by Kafka by a .seek.
+      // If after two attempts there is a timeout, the Task is FAILED and sent to another
+      // Spark executor causing a delay in the streaming window.
+      // If the timeout is too low and the Kafka brokers need more time to answer there will be
+      // many “TASK FAILED”s,
+      // which causes a delay in the preparation of the assigned tasks into the Executors.
+      // However, if this timeout is too high the Spark executor wastes a lot of time doing nothing
+      // and produces large delays (pollTimeout + task scheduling in the new executor).
+      //The default value of the Spark version 2.x. was 512ms, which could be a good start.
+      // If the Spark jobs cause many “TASK FAILED”s you would need to RAISE that value and
+      // investigate why the Kafka brokers
+      // took so long to send the records to the poll.
+      .set("spark.streaming.kafka.consumer.poll.ms", "512")
     /*create spark streaming context*/
     val ssc = new StreamingContext(sparkConf, Seconds(30))
 
@@ -258,13 +258,13 @@ object KafkaAndSparkStreaming {
         val metadata = rangeOfOffsets(TaskContext.get.partitionId)
         /*print topic, partition, fromoofset and lastoffset of each partition*/
         println(s"topic: ${metadata.topic} " +
-                s"partition: ${metadata.partition} " +
-                s"fromOffset: ${metadata.fromOffset} " +
-                s"untilOffset: ${metadata.untilOffset}")
+          s"partition: ${metadata.partition} " +
+          s"fromOffset: ${metadata.fromOffset} " +
+          s"untilOffset: ${metadata.untilOffset}")
       } // rdd.foreachPartition
-      /*using SQL on top of streams*/
-      /*create SQL context*/
-      val sqlContext = SparkSession.builder().getOrCreate().sqlContext
+    /*using SQL on top of streams*/
+    /*create SQL context*/
+    val sqlContext = SparkSession.builder().getOrCreate().sqlContext
 
       val data = rdd.map(_.value().split(",").to[List]).map(Utils.row)
 
@@ -275,10 +275,10 @@ object KafkaAndSparkStreaming {
 
       /*find total gdp spending per country*/
       val gdpByCountryDF = sqlContext.sql("select country, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country")
-      gdpByCountryDF.show(100,false)
+      gdpByCountryDF.show(100, false)
 
       sqlContext.sql("select country, time, pc_gdp, sum(pc_gdp) as sum_pc_gdp from pharmaAnalytics group by country,time,pc_gdp order by country")
-                .show(10,false)
+        .show(10, false)
       /*
         Commit the offset after all the processing is completed.
         Using the new API to manage the offsets is not necessary neither to make the implementation
