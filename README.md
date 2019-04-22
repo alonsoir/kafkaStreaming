@@ -37,14 +37,15 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	aironman@MacBook-Pro-Retina-de-Alonso ~/I/Chapter9> sbt run
 	[info] Loading global plugins from /Users/aironman/.sbt/1.0/plugins
+	[info] Updating ProjectRef(uri("file:/Users/aironman/.sbt/1.0/plugins/"), "global-plugins")...
+	[info] Done updating.
 	[info] Loading settings for project chapter9-build from plugins.sbt ...
 	[info] Loading project definition from /Users/aironman/IdeaProjects/Chapter9/project
+	[info] Updating ProjectRef(uri("file:/Users/aironman/IdeaProjects/Chapter9/project/"), "chapter9-build")...
+	[info] Done updating.
 	[info] Loading settings for project chapter9 from build.sbt ...
 	[info] Set current project to Chapter9 (in build file:/Users/aironman/IdeaProjects/Chapter9/)
-	[info] Updating ...
-	[info] Done updating.
-	[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
-	[info] Compiling 5 Scala sources to /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/classes ...
+	[info] Compiling 6 Scala sources to /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/classes ...
 	[warn] there were two deprecation warnings; re-run with -deprecation for details
 	[warn] one warning found
 	[info] Done compiling.
@@ -57,15 +58,16 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Multiple main classes detected, select one to run:
 
- 		[1] chapter9.KafkaAndSparkStreaming
- 		[2] chapter9.KafkaSparkStreamingReceiver
- 		[3] chapter9.KafkaStreamWithFlink
- 		[4] chapter9.WordCountFlink
+	 [1] chapter9.KafkaAndSparkStreaming
+	 [2] chapter9.KafkaSparkStreamingReceiver
+	 [3] chapter9.KafkaStreamWithFlink
+	 [4] chapter9.StreamSQLExample
+	 [5] chapter9.WordCountFlink
 	[info] Packaging /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/chapter9_2.11-1.0.jar ...
 	[info] Done packaging.
 
 	Enter number: 
- 
+
 
 	In the root folder, run this command:
 	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
@@ -81,7 +83,7 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	KafkaAndFlink. DONE!
 		WordCount is working, KafkaStreamingFlink is working. 
 
-	Apply optimizations. PENDING!
+	Apply optimizations. DONE!
 
 # TROUBLESHOOTING
 
