@@ -34,10 +34,10 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	In the root folder, run these commands:
 
-	# Run zookeeper first
+	## Run zookeeper first
 	~> zkServer start 
 
-	# Run kafka producer
+	## Run kafka producer
 	~> kafka-console-producer --broker-list localhost:9092 --topic pharma-topic < pharma.txt
 
 	Run command sbt run
