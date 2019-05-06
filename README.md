@@ -46,15 +46,14 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	aironman@MacBook-Pro-Retina-de-Alonso ~/I/Chapter9> sbt run
 	[info] Loading global plugins from /Users/aironman/.sbt/1.0/plugins
-	[info] Updating ProjectRef(uri("file:/Users/aironman/.sbt/1.0/plugins/"), "global-plugins")...
-	[info] Done updating.
 	[info] Loading settings for project chapter9-build from plugins.sbt ...
 	[info] Loading project definition from /Users/aironman/IdeaProjects/Chapter9/project
-	[info] Updating ProjectRef(uri("file:/Users/aironman/IdeaProjects/Chapter9/project/"), "chapter9-build")...
-	[info] Done updating.
 	[info] Loading settings for project chapter9 from build.sbt ...
 	[info] Set current project to Chapter9 (in build file:/Users/aironman/IdeaProjects/Chapter9/)
-	[info] Compiling 6 Scala sources to /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/classes ...
+	[info] Updating ...
+	[info] Done updating.
+	[warn] There may be incompatibilities among your library dependencies; run 'evicted' to see detailed eviction warnings.
+	[info] Compiling 5 Scala sources to /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/classes ...
 	[warn] there were two deprecation warnings; re-run with -deprecation for details
 	[warn] one warning found
 	[info] Done compiling.
@@ -67,16 +66,15 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Multiple main classes detected, select one to run:
 
-	 [1] chapter9.KafkaAndSparkStreaming
-	 [2] chapter9.KafkaSparkStreamingReceiver
-	 [3] chapter9.KafkaStreamWithFlink
-	 [4] chapter9.StreamSQLExample
-	 [5] chapter9.WordCountFlink
+ 		[1] chapter9.KafkaAndSparkStreaming
+ 		[2] chapter9.KafkaSparkStreamingReceiver
+ 		[3] chapter9.KafkaStreamWithFlink
+ 		[4] chapter9.WordCountFlink
 	[info] Packaging /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/chapter9_2.11-1.0.jar ...
 	[info] Done packaging.
 
 	Enter number: 
-
+ 
 
 	You will see the output in the terminal where you execute run command.
 
@@ -89,7 +87,7 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	KafkaAndFlink. DONE!
 		WordCount is working, KafkaStreamingFlink is working. 
 
-	Apply optimizations. DONE!
+	Apply optimizations. PENDING!
 
 # TROUBLESHOOTING
 
@@ -105,6 +103,10 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	A recurrent problem happened when i tried to go to any declaration, imports missing. 
 	The way to solve it is to change name variable in build.sbt file. 
 	There were a name different from the name project, Chapter9. It MUST be the same that name project. 
+
+	There is a branch with kafka-streams samples, chapter-3, but it cannot be merged into master or develop branch due to 
+	an incompatibility between kafka-streams and apache spark. Spark uses jackson-core-2.6.7.1 and kafka-streams
+	use 2.9.8. You can compile it but it will crash at runtime.
 
 # LINKS
 
