@@ -104,6 +104,10 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 	The way to solve it is to change name variable in build.sbt file. 
 	There were a name different from the name project, Chapter9. It MUST be the same that name project. 
 
+	There is a branch with kafka-streams samples, chapter-3, but it cannot be merged into master or develop branch due to 
+	an incompatibility between kafka-streams and apache spark. Spark uses jackson-core-2.6.7.1 and kafka-streams
+	use 2.9.8. You can compile it but it will crash at runtime.
+
 # LINKS
 
 	https://github.com/PacktPublishing/Mastering-Apache-Kafka-2.0

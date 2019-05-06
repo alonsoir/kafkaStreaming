@@ -24,7 +24,7 @@ resolvers ++= Seq(
   // chapter 3
   //"Typesafe Releases" at "http://repo.typesafe.com/typesafe/releases/",
   //"apache snapshots" at "http://repository.apache.org/snapshots/",
-  //"confluent" at "https://packages.confluent.io/maven/"
+  "confluent" at "https://packages.confluent.io/maven/"
 )
 
 

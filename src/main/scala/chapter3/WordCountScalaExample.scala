@@ -127,7 +127,7 @@ object WordCountScalaExample extends App {
 
   // Add shutdown hook to respond to SIGTERM and gracefully close Kafka Streams
   sys.ShutdownHookThread {
-    streams.close(Duration.ofSeconds(10))
+    streams.close(Duration.ofSeconds(100))
   }
 
 }
