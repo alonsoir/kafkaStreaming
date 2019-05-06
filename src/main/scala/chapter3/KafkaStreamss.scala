@@ -25,7 +25,7 @@ object KafkaStreamss {
     val config: Properties = {
       val p = new Properties()
       p.put(StreamsConfig.APPLICATION_ID_CONFIG, "wordcount-application")
-      p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9093")
+      p.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092")
       p
     }
 
