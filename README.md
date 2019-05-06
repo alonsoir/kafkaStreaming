@@ -66,10 +66,14 @@ This project is a fork of the provided code of Spark Streaming Processing with K
 
 	Multiple main classes detected, select one to run:
 
- 		[1] chapter9.KafkaAndSparkStreaming
- 		[2] chapter9.KafkaSparkStreamingReceiver
- 		[3] chapter9.KafkaStreamWithFlink
- 		[4] chapter9.WordCountFlink
+ 	[1] chapter3.KafkaStreamss
+ 	[2] chapter3.WordCountScalaExample
+ 	[3] chapter9.KafkaAndSparkStreaming
+ 	[4] chapter9.KafkaSparkStreamingReceiver
+ 	[5] chapter9.KafkaStreamWithFlink
+ 	[6] chapter9.StreamSQLExample
+ 	[7] chapter9.WordCountFlink
+	[info] Packaging /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/chapter9_2.11-1.0.jar ...
 	[info] Packaging /Users/aironman/IdeaProjects/Chapter9/target/scala-2.11/chapter9_2.11-1.0.jar ...
 	[info] Done packaging.
 
