@@ -1,6 +1,6 @@
-README file
+# README file
 
-This project is a fork of the provided code of Spark Streaming Processing with Kafka book. 
+This project tries to fix the code initially provided by the authors of the Kafka Streams book through examples from Packt publishing. Chapter three and Chapter 9.
 
 # Preliminaries
 
