@@ -89,7 +89,7 @@ This project tries to fix the code initially provided by the authors of the Kafk
 	KafkaAndFlink. DONE!
 		WordCount is working, KafkaStreamingFlink is working. 
 
-	Apply optimizations. PENDING!
+	Apply optimizations. DONE!
 
 # TROUBLESHOOTING
 
